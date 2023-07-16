@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import RoomJoinPage from "./RoomJoinPage";
 import CreateRoomPage from "./CreateRoomPage";
 import RoomPage from "./RoomPage";
@@ -15,7 +15,7 @@ function HomePage() {
     return (
       <Router>
         <Routes>
-          <Route path="/" element={<p> This is homepage </p>} />
+          <Route path="/" element={<p> This is a homepage </p>} />
           <Route path="join" element={<RoomJoinPage />} />
           <Route path="create" element={<CreateRoomPage />} /> 
           <Route path="room/:roomCode" element={<RoomPage />} />
