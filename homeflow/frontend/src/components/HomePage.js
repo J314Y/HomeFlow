@@ -43,6 +43,14 @@ function renderHomePage() {
 function HomePage() {
   const [roomCode, setRoomCode] = useState();
 
+  const clearRoomCode = () => {
+    console.log("entered into callback now and deleting room code on homepage")
+    console.log(roomCode)
+    setRoomCode(null)
+    console.log("New room code:")
+    console.log(roomCode)
+  };
+  
   useEffect(() => {
     fetch('/api/user-in-room')
     .then((response) => response.json())
@@ -66,7 +74,7 @@ function HomePage() {
         <Route path="/" element={roomCode ? <Navigate to={`/room/${roomCode}`} /> : renderHomePage() } >  </Route>
         <Route path="join" element={<RoomJoinPage />} />
         <Route path="create" element={<CreateRoomPage />} /> 
-        <Route path="room/:roomCode" element={<RoomPage />} />
+        <Route path="room/:roomCode" element={<RoomPage onDeleteRoom={clearRoomCode} />} />
       </Routes>
     </Router>
   );
