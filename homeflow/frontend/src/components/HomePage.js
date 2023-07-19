@@ -44,11 +44,7 @@ function HomePage() {
   const [roomCode, setRoomCode] = useState();
 
   const clearRoomCode = () => {
-    console.log("entered into callback now and deleting room code on homepage")
-    console.log(roomCode)
     setRoomCode(null)
-    console.log("New room code:")
-    console.log(roomCode)
   };
   
   useEffect(() => {

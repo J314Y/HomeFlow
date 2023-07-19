@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { Button, Grid, Typography } from "@material-ui/core";
+import SettingsButton from "./SettingsButton.js"
+import Settings from "./Settings.js";
 
 const RoomPage = (props) => {
     let navigate = useNavigate();    
@@ -13,7 +15,8 @@ const RoomPage = (props) => {
     const [votesToSkip, setVotesToSkip] = useState(defaultVotes);
     const [isHost, setIsHost] = useState(defaultIsHost);
     const [roomCode, setRoomCode] = useState(useParams().roomCode);
-
+    const [showSettings, setShowSettings] = useState(false);
+ 
     const leaveButtonPressed = () => {
         const requestOptions = {
             method: 'POST',
@@ -29,8 +32,6 @@ const RoomPage = (props) => {
     }
 
     const getRoomDetails = () => {
-        console.log('get room details')
-        console.log(roomCode)
         fetch('/api/get-room' + '?code=' + roomCode)
             .then((response) => {
                 if (!response.ok) {
@@ -47,11 +48,22 @@ const RoomPage = (props) => {
             .catch((error) => console.log(error));
     }
 
+    const showSettingsButton = () => {
+        setShowSettings(true);
+    }
+
     useEffect(() => {
         getRoomDetails();
     }, [])
 
+    if (showSettings) {
+        return (
+            <Settings votesToSkip={votesToSkip} guestCanPause={guestCanPause} roomCode={roomCode} setShowSettings={setShowSettings} /> 
+        );
+    }
+
     return (
+        
         <Grid container spacing={1}>
             <Grid item xs={12} align="center">
                 <Typography variant="h4" component="h4">
@@ -73,6 +85,7 @@ const RoomPage = (props) => {
                     Is host: {isHost.toString()}
                 </Typography>
             </Grid>
+            { isHost ? <SettingsButton change={showSettingsButton} /> : null }
             <Grid item xs={12} align="center">
                 <Button color="secondary" variant="contained" onClick={leaveButtonPressed}> Leave Room </Button>
             </Grid>
