@@ -28,7 +28,6 @@ const RoomPage = (props) => {
             .then((data) => {
                 navigate('/')
             });
-        console.log("finished leave button pressed")
     }
 
     const getRoomDetails = () => {
@@ -58,7 +57,7 @@ const RoomPage = (props) => {
 
     if (showSettings) {
         return (
-            <Settings votesToSkip={votesToSkip} guestCanPause={guestCanPause} roomCode={roomCode} setShowSettings={setShowSettings} /> 
+            <Settings votesToSkip={votesToSkip} guestCanPause={guestCanPause} roomCode={roomCode} setShowSettings={setShowSettings} updateCallback={getRoomDetails} /> 
         );
     }
 
