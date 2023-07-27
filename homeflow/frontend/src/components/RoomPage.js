@@ -16,7 +16,27 @@ const RoomPage = (props) => {
     const [isHost, setIsHost] = useState(defaultIsHost);
     const [roomCode, setRoomCode] = useState(useParams().roomCode);
     const [showSettings, setShowSettings] = useState(false);
- 
+    const [spotifyAuthenticated, setAuthenticated] = useState(false);
+
+    const authenticateSpotify = () => {
+        console.log("authenticating spotify")
+        fetch('/spotify/is-authenticated')
+        .then((response) => response.json())
+        .then((data) => {
+            console.log("Authentication: ");
+            console.log(data.status.toString());
+            setAuthenticated(data.status);
+            if (!data.status) {
+                console.log("here")
+                fetch('/spotify/get-auth-url')
+                .then((response) => response.json())
+                .then((data) => {
+                    window.location.replace(data.url)
+                });
+            }
+        });
+    }
+
     const leaveButtonPressed = () => {
         const requestOptions = {
             method: 'POST',
@@ -31,6 +51,7 @@ const RoomPage = (props) => {
     }
 
     const getRoomDetails = () => {
+        console.log("get room details");
         fetch('/api/get-room' + '?code=' + roomCode)
             .then((response) => {
                 if (!response.ok) {
@@ -43,6 +64,12 @@ const RoomPage = (props) => {
                 setGuestCanPause(data.guest_can_pause);
                 setVotesToSkip(data.votes_to_skip);
                 setIsHost(data.is_host);
+                
+                console.log(data.is_host.toString());
+                if (data.is_host) {
+                    console.log("printing in the ishost");
+                    authenticateSpotify();
+                }
             })
             .catch((error) => console.log(error));
     }
@@ -69,22 +96,7 @@ const RoomPage = (props) => {
                     Code: {roomCode}
                 </Typography>
             </Grid>
-            <Grid item xs={12} align="center">
-                <Typography variant="h6" component="h6">
-                    Votes To Skip: {votesToSkip}
-                </Typography>
-            </Grid>
-            <Grid item xs={12} align="center">
-                <Typography variant="h6" component="h6">
-                    Guest Can Pause: {guestCanPause.toString()}
-                </Typography>
-            </Grid>
-            <Grid item xs={12} align="center">
-                <Typography variant="h6" component="h6">
-                    Is host: {isHost.toString()}
-                </Typography>
-            </Grid>
-            { isHost ? <SettingsButton change={showSettingsButton} /> : null }
+            
             <Grid item xs={12} align="center">
                 <Button color="secondary" variant="contained" onClick={leaveButtonPressed}> Leave Room </Button>
             </Grid>
