@@ -19,9 +19,9 @@ function RoomPage(props) {
     const [showSettings, setShowSettings] = useState(false);
     const [spotifyAuthenticated, setAuthenticated] = useState(false);
     const [currentSong, setCurrentSong] = useState({});
+    const [errorFlag, setErrorFlag] = useState(false);
 
     const authenticateSpotify = () => {
-        console.log("authenticating spotify")
         fetch('/spotify/is-authenticated')
         .then((response) => response.json())
         .then((data) => {
@@ -50,14 +50,19 @@ function RoomPage(props) {
     }
 
     const getCurrentSong = () => {
-        console.log('entering into get current song');
         fetch('/spotify/current-song')
         .then((response) => {
             if (!response.ok) {
-                return {};
+                setErrorFlag(true);
+                return {'error': 'no song playing'};
             } else {
-                console.log('Response was ok');
-                return response.json();
+                if (response.status == 204) {
+                    setErrorFlag(true);
+                    return {};
+                }
+                else {
+                    return response.json();
+                }
             }
         })
         .then((data) => {
@@ -95,7 +100,7 @@ function RoomPage(props) {
         getCurrentSong();
         const interval = setInterval(() => {
             getCurrentSong();
-        }, 1000);
+        }, 10000);
         return () => clearInterval(interval);
     }, [])
 
@@ -114,7 +119,7 @@ function RoomPage(props) {
                 </Typography>
             </Grid>
             <Grid item xs={12} align="center">
-                <MusicPlayer song={currentSong} />
+                <MusicPlayer song={currentSong} error={errorFlag} />
             </Grid>
             { isHost ? <SettingsButton change={showSettingsButton} /> : null }
             <Grid item xs={12} align="center">

@@ -54,9 +54,6 @@ function HomePage() {
       if (data.code) {
         setRoomCode(data.code)
       }
-      else {
-        console.log('User is not in a room')
-      }
     }).catch((error) => {
       console.log(error);
     });
