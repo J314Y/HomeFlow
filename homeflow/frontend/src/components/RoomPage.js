@@ -3,8 +3,9 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 import { Button, Grid, Typography } from "@material-ui/core";
 import SettingsButton from "./SettingsButton.js"
 import Settings from "./Settings.js";
+import MusicPlayer from "./MusicPlayer.js";
 
-const RoomPage = (props) => {
+function RoomPage(props) {
     let navigate = useNavigate();    
 
     const defaultGuestCanPause = true;
@@ -17,17 +18,15 @@ const RoomPage = (props) => {
     const [roomCode, setRoomCode] = useState(useParams().roomCode);
     const [showSettings, setShowSettings] = useState(false);
     const [spotifyAuthenticated, setAuthenticated] = useState(false);
+    const [currentSong, setCurrentSong] = useState({});
 
     const authenticateSpotify = () => {
         console.log("authenticating spotify")
         fetch('/spotify/is-authenticated')
         .then((response) => response.json())
         .then((data) => {
-            console.log("Authentication: ");
-            console.log(data.status.toString());
             setAuthenticated(data.status);
             if (!data.status) {
-                console.log("here")
                 fetch('/spotify/get-auth-url')
                 .then((response) => response.json())
                 .then((data) => {
@@ -50,8 +49,23 @@ const RoomPage = (props) => {
             });
     }
 
+    const getCurrentSong = () => {
+        console.log('entering into get current song');
+        fetch('/spotify/current-song')
+        .then((response) => {
+            if (!response.ok) {
+                return {};
+            } else {
+                console.log('Response was ok');
+                return response.json();
+            }
+        })
+        .then((data) => {
+            setCurrentSong(data);
+        });
+    }
+
     const getRoomDetails = () => {
-        console.log("get room details");
         fetch('/api/get-room' + '?code=' + roomCode)
             .then((response) => {
                 if (!response.ok) {
@@ -65,9 +79,7 @@ const RoomPage = (props) => {
                 setVotesToSkip(data.votes_to_skip);
                 setIsHost(data.is_host);
                 
-                console.log(data.is_host.toString());
                 if (data.is_host) {
-                    console.log("printing in the ishost");
                     authenticateSpotify();
                 }
             })
@@ -80,6 +92,11 @@ const RoomPage = (props) => {
 
     useEffect(() => {
         getRoomDetails();
+        getCurrentSong();
+        const interval = setInterval(() => {
+            getCurrentSong();
+        }, 1000);
+        return () => clearInterval(interval);
     }, [])
 
     if (showSettings) {
@@ -96,7 +113,10 @@ const RoomPage = (props) => {
                     Code: {roomCode}
                 </Typography>
             </Grid>
-            
+            <Grid item xs={12} align="center">
+                <MusicPlayer song={currentSong} />
+            </Grid>
+            { isHost ? <SettingsButton change={showSettingsButton} /> : null }
             <Grid item xs={12} align="center">
                 <Button color="secondary" variant="contained" onClick={leaveButtonPressed}> Leave Room </Button>
             </Grid>

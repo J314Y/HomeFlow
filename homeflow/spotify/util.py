@@ -34,8 +34,6 @@ def update_or_create_user_tokens(session_id, access_token, refresh_token, token_
 
 def is_spotify_authenticated(session_id):
     tokens = get_user_tokens(session_id)
-    logger.info(tokens)
-    logger.info(tokens.expires_in)
     if tokens:
         expiry = tokens.expires_in
         if expiry <= timezone.now():

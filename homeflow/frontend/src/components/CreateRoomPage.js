@@ -41,14 +41,12 @@ const CreateRoomPage = (props) => {
         votes_to_skip: votesToSkip
       }),
     };
-    console.log(requestOptions);
     fetch("/api/create-room", requestOptions)
       .then((response) => response.json())
       .then((data) => navigate('/room/' + data.code));
   };
 
   const handleUpdateRoomButtonClicked = (props) => {
-    console.log("entered here");
 
     const requestOptions = {
       method: 'PATCH',
@@ -61,7 +59,6 @@ const CreateRoomPage = (props) => {
     };
     fetch("/api/update-room", requestOptions)
       .then((response) =>  {
-        console.log(response);
         if (response.ok) {
           setResponseMsg('Room Successfully Updated!');
           setErrorSeverity('success');
@@ -72,7 +69,6 @@ const CreateRoomPage = (props) => {
         }
         props.updateCallback();
       });
-      console.log(responseMsg);
   };
 
   const renderCreateRoomButtons = () => {

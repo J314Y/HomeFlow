@@ -62,8 +62,6 @@ function HomePage() {
     });
   }, []);
 
-  console.log(roomCode)
-
   return (
     <Router>
       <Routes>
