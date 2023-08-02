@@ -73,12 +73,17 @@ def execute_spotify_api_request(session_id, endpoint, post_=False, put_=False):
 
     if post_:
         response = post(BASE_URL + endpoint, headers=headers)
-    if put_:
+    elif put_:
         response = put(BASE_URL + endpoint, headers=headers)
     else:
         response = get(BASE_URL + endpoint, {}, headers=headers)
 
     try:
+        if response.status_code == 204:
+            return {'status_code': 204}
         return response.json()
     except:
         return { 'Error': 'Issue with Request' }
+
+def skip_song(session_id):
+    execute_spotify_api_request(session_id, "player/next", post_=True)

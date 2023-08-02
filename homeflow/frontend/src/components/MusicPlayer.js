@@ -26,6 +26,8 @@ function MusicPlayer(props) {
     const [error, setError] = useState(false);
     const [musicPlayerErrorMsg, setMusicPlayerErrorMsg] = useState('');
     const [pauseErrorSeverity, setPauseErrorSeverity] = useState("success");
+    const [votes, setVotes] = useState(0);
+    const [votesReq, setVotesRequired] = useState(1);
 
     useEffect(() => {
         setTime(props.song.time);
@@ -36,7 +38,17 @@ function MusicPlayer(props) {
         setIsPlaying(props.song.is_playing);
         setImageURL(props.song.image_url);
         setError(props.error);
+        setVotes(props.song.votes);
+        setVotesRequired(props.song.votes_required)
     }, [props])
+
+    const skipSong = () => {
+        const requestOptions = {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+        };
+        fetch('/spotify/skip', requestOptions);
+    }
 
     const playPauseSong = () => {
         const requestOptions = {
@@ -46,12 +58,15 @@ function MusicPlayer(props) {
                 isPlaying: isPlaying
             }),
         };
+        console.log('about to hit play pause endpoint')
         fetch('/spotify/play-pause-song', requestOptions)
-            .then((response) => response.json())
+            .then((response) => {
+                return response.json()
+            })
             .then((data) => {
-                if(!data.ok){
-                    setMusicPlayerErrorMsg(data.message)
+                if (data.message != 'Success') {
                     setPauseErrorSeverity('error')
+                    setMusicPlayerErrorMsg(data.message)
                 }
             });
     };
@@ -81,8 +96,8 @@ function MusicPlayer(props) {
                             <IconButton onClick={playPauseSong}> 
                                 { isPlaying ? <Pause /> : <PlayArrow /> } 
                             </IconButton>
-                            <IconButton>
-                                <SkipNext />
+                            <IconButton onClick={skipSong}>
+                                <SkipNext /> {votes} / {" "} {votesReq}
                             </IconButton>
                         </div>
                     </Grid>
