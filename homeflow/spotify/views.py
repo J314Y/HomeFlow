@@ -68,7 +68,6 @@ class CurrentSong(APIView):
             Vote.objects.filter(room=room).delete()
 
     def get(self, request, format=None):
-        logger.info("get in here")
         room_code = self.request.session.get('room_code')
         room = Room.objects.filter(code=room_code)
         if room.exists():
@@ -140,7 +139,6 @@ class PlayPauseSong(APIView):
 
 class SkipSong(APIView):
     def post(self, request, format=None):
-        logger.info("skipping") 
         room_code = self.request.session.get('room_code')
         room = Room.objects.filter(code=room_code)[0]
         votes = Vote.objects.filter(room=room, song_id=room.current_song)
@@ -150,8 +148,10 @@ class SkipSong(APIView):
             votes.delete()
             skip_song(room.host)
         else:
-            vote = Vote(user=self.request.session.session_key, room=room, song_id=room.current_song)
-            vote.save()
+            vote = Vote.objects.filter(user=self.request.session.session_key, room=room, song_id=room.current_song)
+            if not vote.exists():
+                vote = Vote(user=self.request.session.session_key, room=room, song_id=room.current_song)
+                vote.save()
 
             votes = Vote.objects.filter(room=room, song_id=room.current_song)
             if len(votes) >= votes_needed:

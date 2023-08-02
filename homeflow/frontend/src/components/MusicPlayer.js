@@ -47,7 +47,13 @@ function MusicPlayer(props) {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
         };
-        fetch('/spotify/skip', requestOptions);
+        fetch('/spotify/skip', requestOptions)
+        .then((response) => {
+            if(!response.ok) {
+                setPauseErrorSeverity('error')
+                setMusicPlayerErrorMsg('Your vote has been recorded')
+            }
+        });
     }
 
     const playPauseSong = () => {
@@ -58,7 +64,6 @@ function MusicPlayer(props) {
                 isPlaying: isPlaying
             }),
         };
-        console.log('about to hit play pause endpoint')
         fetch('/spotify/play-pause-song', requestOptions)
             .then((response) => {
                 return response.json()
