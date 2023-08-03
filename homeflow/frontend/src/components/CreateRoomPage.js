@@ -14,7 +14,7 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import Alert from "@material-ui/lab/Alert";
 
-const CreateRoomPage = (props) => {
+export default function CreateRoomPage(props) {
   let navigate = useNavigate();
 
   const defaultVotes = 2;
@@ -139,5 +139,3 @@ const CreateRoomPage = (props) => {
     </Grid>
   );
 }
-
-export default CreateRoomPage;

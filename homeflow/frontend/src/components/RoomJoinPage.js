@@ -7,7 +7,7 @@ import {
 } from "@material-ui/core";
 import { Link, useNavigate } from "react-router-dom";
 
-function RoomJoinPage() {
+export default function RoomJoinPage() {
   let navigate = useNavigate();
 
   const [roomCode, setRoomCode] = useState('');
@@ -65,5 +65,3 @@ function RoomJoinPage() {
   );
 
 }
-
-export default RoomJoinPage;

@@ -5,7 +5,7 @@ import {
 } from "@material-ui/core";
 import CreateRoomPage from "./CreateRoomPage";
 
-const Settings = (props) => {
+export default function Settings(props) {
 
     return (
         <Grid container spacing={1}>
@@ -25,5 +25,3 @@ const Settings = (props) => {
         </Grid>
     );
 }
-
-export default Settings;

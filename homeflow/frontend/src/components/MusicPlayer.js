@@ -14,7 +14,7 @@ import {
     Pause 
 } from "@material-ui/icons";
 
-function MusicPlayer(props) {
+export default function MusicPlayer(props) {
     
     const [title, setTitle] = useState('');
     const [artist, setArtist] = useState('');
@@ -131,5 +131,3 @@ function MusicPlayer(props) {
     
   }
   
-  export default MusicPlayer;
-

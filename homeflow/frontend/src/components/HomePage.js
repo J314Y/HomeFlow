@@ -17,7 +17,6 @@ import {
   Route,
 } from "react-router-dom";
 
-
 function renderHomePage() {
   return (
     <Grid container spacing={3}>
@@ -40,7 +39,7 @@ function renderHomePage() {
   );
 }
 
-function HomePage() {
+export default function HomePage() {
   const [roomCode, setRoomCode] = useState();
 
   const clearRoomCode = () => {
@@ -70,5 +69,3 @@ function HomePage() {
     </Router>
   );
 }
-
-export default HomePage

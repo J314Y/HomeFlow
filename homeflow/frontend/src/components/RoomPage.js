@@ -5,7 +5,7 @@ import SettingsButton from "./SettingsButton.js"
 import Settings from "./Settings.js";
 import MusicPlayer from "./MusicPlayer.js";
 
-function RoomPage(props) {
+export default function RoomPage(props) {
     let navigate = useNavigate();    
 
     const defaultGuestCanPause = true;
@@ -129,7 +129,4 @@ function RoomPage(props) {
     );
     
 }
-
-
-export default RoomPage;
 

@@ -1,16 +1,20 @@
 import React from "react";
 import { render } from "react-dom";
 import HomePage from "./HomePage";
+import NavBar from "./NavBar";
 
-function App() {
+
+export default function App() {
+
   return (
-    <div className="homepage">
-      <HomePage />
+    <div> 
+      <NavBar /> 
+      <div className="homepage">
+        <HomePage />
+      </div>
     </div>
   );
 }
-
-export default App;
 
 const appDiv = document.getElementById("app");
 render(<App />, appDiv);
